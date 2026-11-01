@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Library System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="splashScreen" class="screen splash-screen">
+        <div class="splash-content">
+            <h1 class="splash-title">Book Library</h1>
+            <p class="splash-subtitle">Room Reservation System</p>
+            <div class="splash-loader"></div>
+        </div>
+    </div>
+
+    <div id="loginScreen" class="screen" style="display:none">
+        <div class="login-container">
+            <div class="login-header">
+                <h1>Book Library</h1>
+                <p>Room Reservation System - Book Inventory</p>
+            </div>
+            <form id="loginForm" novalidate>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Login</button>
+                <p class="login-hint">Default: admin / admin123</p>
+            </form>
+            <div id="loginError" class="error-message"></div>
+        </div>
+    </div>
+
+    <div id="appScreen" class="screen" style="display:none">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <button class="nav-toggle" id="navToggle" aria-label="Open menu">☰</button>
+                <h2>Book Library</h2>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item nav-menu-header">
+                    <span class="nav-menu-title">Menu</span>
+                    <button class="nav-menu-close" id="navMenuClose" aria-label="Close menu">×</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link active" data-page="dashboard">Dashboard</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" data-page="books">Books</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" data-page="authors">Authors</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" data-page="categories">Categories</button>
+                </li>
+                <li class="nav-item" id="usersNavItem">
+                    <button class="nav-link" data-page="users">Users</button>
+                </li>
+                <li class="nav-item nav-menu-divider"></li>
+                <li class="nav-item">
+                    <button class="nav-link nav-link-logout" id="logoutBtn">Logout</button>
+                </li>
+            </ul>
+            <div class="nav-overlay" id="navOverlay"></div>
+            <div class="nav-user">
+                <span id="currentUser"></span>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <section id="page-dashboard" class="page active">
+                <header class="page-header">
+                    <h1>Dashboard</h1>
+                    <p>Book Inventory Overview</p>
+                </header>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3 id="statBooks">0</h3>
+                            <p>Total Books</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3 id="statAvailable">0</h3>
+                            <p>Available</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3 id="statAuthors">0</h3>
+                            <p>Authors</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3 id="statCategories">0</h3>
+                            <p>Categories</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Recent Books</h2>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Author</th>
+                                    <th>Category</th>
+                                    <th>ISBN</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentBooksTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="page-books" class="page">
+                <header class="page-header">
+                    <h1>Book Inventory</h1>
+                    <button class="btn btn-primary" id="addBookBtn">+ Add New Book</button>
+                </header>
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Books List</h2>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Title</th>
+                                    <th>Author</th>
+                                    <th>Category</th>
+                                    <th>ISBN</th>
+                                    <th>Year</th>
+                                    <th>Quantity</th>
+                                    <th>Availability</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="booksTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="page-authors" class="page">
+                <header class="page-header">
+                    <h1>Authors</h1>
+                    <button class="btn btn-primary" id="addAuthorBtn">+ Add New Author</button>
+                </header>
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Authors List</h2>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>Country</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="authorsTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="page-categories" class="page">
+                <header class="page-header">
+                    <h1>Categories</h1>
+                    <button class="btn btn-primary" id="addCategoryBtn">+ Add New Category</button>
+                </header>
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Categories List</h2>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Category Name</th>
+                                    <th>Description</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="categoriesTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="page-users" class="page">
+                <header class="page-header">
+                    <h1>Users</h1>
+                    <button class="btn btn-primary" id="addUserBtn">+ Add New User</button>
+                </header>
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Users List</h2>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Username</th>
+                                    <th>Full Name</th>
+                                    <th>Role</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="bookModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="bookModalTitle">Add Book</h2>
+                <button class="modal-close" data-modal="bookModal">&times;</button>
+            </div>
+            <form id="bookForm" novalidate>
+                <input type="hidden" id="bookId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bookTitle">Book Title *</label>
+                        <input type="text" id="bookTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bookISBN">ISBN *</label>
+                        <input type="text" id="bookISBN" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bookAuthor">Author *</label>
+                        <select id="bookAuthor" required>
+                            <option value="">Select Author</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="bookCategory">Category *</label>
+                        <select id="bookCategory" required>
+                            <option value="">Select Category</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bookYear">Publication Year *</label>
+                        <input type="number" id="bookYear" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bookQuantity">Quantity *</label>
+                        <input type="number" id="bookQuantity" min="0" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="bookAvailability">Availability *</label>
+                    <select id="bookAvailability" required>
+                        <option value="Available">Available</option>
+                        <option value="Unavailable">Unavailable</option>
+                        <option value="Reserved">Reserved</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" data-modal="bookModal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="authorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="authorModalTitle">Add Author</h2>
+                <button class="modal-close" data-modal="authorModal">&times;</button>
+            </div>
+            <form id="authorForm" novalidate>
+                <input type="hidden" id="authorId">
+                <div class="form-group">
+                    <label for="authorName">Full Name *</label>
+                    <input type="text" id="authorName" required>
+                </div>
+                <div class="form-group">
+                    <label for="authorEmail">Email *</label>
+                    <input type="email" id="authorEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="authorCountry">Country *</label>
+                    <input type="text" id="authorCountry" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" data-modal="authorModal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="categoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="categoryModalTitle">Add Category</h2>
+                <button class="modal-close" data-modal="categoryModal">&times;</button>
+            </div>
+            <form id="categoryForm" novalidate>
+                <input type="hidden" id="categoryId">
+                <div class="form-group">
+                    <label for="categoryName">Category Name *</label>
+                    <input type="text" id="categoryName" required>
+                </div>
+                <div class="form-group">
+                    <label for="categoryDescription">Description *</label>
+                    <textarea id="categoryDescription" rows="3" required></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" data-modal="categoryModal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="userModalTitle">Add User</h2>
+                <button class="modal-close" data-modal="userModal">&times;</button>
+            </div>
+            <form id="userForm" novalidate>
+                <input type="hidden" id="userId">
+                <div class="form-group">
+                    <label for="userUsername">Username *</label>
+                    <input type="text" id="userUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="userFullName">Full Name *</label>
+                    <input type="text" id="userFullName" required>
+                </div>
+                <div class="form-group">
+                    <label for="userRole">Role *</label>
+                    <select id="userRole" required>
+                        <option value="User">User</option>
+                        <option value="Administrator">Administrator</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="userPassword">Password *</label>
+                    <input type="password" id="userPassword" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" data-modal="userModal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="viewBookModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Book Details</h2>
+                <button class="modal-close" data-modal="viewBookModal">&times;</button>
+            </div>
+            <div class="book-details">
+                <div class="detail-row">
+                    <strong>Title:</strong> <span id="viewBookTitle"></span>
+                </div>
+                <div class="detail-row">
+                    <strong>ISBN:</strong> <span id="viewBookISBN"></span>
+                </div>
+                <div class="detail-row">
+                    <strong>Author:</strong> <span id="viewBookAuthor"></span>
+                </div>
+                <div class="detail-row">
+                    <strong>Category:</strong> <span id="viewBookCategory"></span>
+                </div>
+                <div class="detail-row">
+                    <strong>Publication Year:</strong> <span id="viewBookYear"></span>
+                </div>
+                <div class="detail-row">
+                    <strong>Quantity:</strong> <span id="viewBookQuantity"></span>
+                </div>
+                <div class="detail-row">
+                    <strong>Availability:</strong> <span id="viewBookAvailability"></span>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" data-modal="viewBookModal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

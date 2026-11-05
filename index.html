@@ -271,11 +271,11 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="bookYear">Publication Year *</label>
-                        <input type="number" id="bookYear" required>
+                        <input type="number" id="bookYear" min="1000" max="2100" step="1" inputmode="numeric" placeholder="e.g. 2024" required>
                     </div>
                     <div class="form-group">
                         <label for="bookQuantity">Quantity *</label>
-                        <input type="number" id="bookQuantity" min="0" required>
+                        <input type="number" id="bookQuantity" min="0" step="1" inputmode="numeric" required>
                     </div>
                 </div>
                 <div class="form-group">

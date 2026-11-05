@@ -506,6 +506,13 @@ textarea {
     border-bottom: none;
 }
 
+.empty-state {
+    text-align: center;
+    color: var(--text-light);
+    font-style: italic;
+    padding: 2rem 1rem;
+}
+
 /* Status Badge */
 .status-badge {
     display: inline-block;
